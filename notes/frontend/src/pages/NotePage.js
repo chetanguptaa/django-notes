@@ -21,7 +21,7 @@ const NotePage = ({ match, history }) => {
     }
 
     let createNote = async () => {
-        fetch(`/api/notes/`, {
+        fetch('/api/notes/', {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -53,7 +53,6 @@ const NotePage = ({ match, history }) => {
     }
 
     let handleSubmit = () => {
-        console.log('NOTE:', note)
         if (noteId !== 'new' && note.body == '') {
             deleteNote()
         } else if (noteId !== 'new') {
@@ -66,7 +65,6 @@ const NotePage = ({ match, history }) => {
 
     let handleChange = (value) => {
         setNote(note => ({ ...note, 'body': value }))
-        console.log('Handle Change:', note)
     }
 
     return (
