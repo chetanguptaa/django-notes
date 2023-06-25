@@ -1,8 +1,11 @@
+from django.http import response
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework.serializers import Serializer
 from .models import Note
-from .serializer import NoteSerializer
+from .serializers import NoteSerializer
+from .utils import updateNote, getNoteDetail, deleteNote, getNotesList, createNote
 
 
 @api_view(['GET'])
@@ -21,19 +24,19 @@ def getRoutes(request):
             'description': 'Returns a single note object'
         },
         {
-            'Endpoint': '/notes/create/',
+            'Endpoint': '/notes/',
             'method': 'POST',
             'body': {'body': ""},
             'description': 'Creates new note with data sent in post request'
         },
         {
-            'Endpoint': '/notes/id/update/',
+            'Endpoint': '/notes/id/',
             'method': 'PUT',
             'body': {'body': ""},
             'description': 'Creates an existing note with data sent in post request'
         },
         {
-            'Endpoint': '/notes/id/delete/',
+            'Endpoint': '/notes/id/',
             'method': 'DELETE',
             'body': None,
             'description': 'Deletes and exiting note'
@@ -42,15 +45,22 @@ def getRoutes(request):
     return Response(routes)
 
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 def getNotes(request):
-    notes = Note.objects.all()
-    serializer = NoteSerializer(notes, many=True)
-    return Response(serializer.data)
+    if request.method == 'GET':
+        return getNotesList(request)
+
+    if request.method == 'POST':
+        return createNote(request)
 
 
-@api_view(['GET'])
+@api_view(['GET', 'PUT', 'DELETE'])
 def getNote(request, pk):
-    note = Note.objects.get(id=pk)
-    serializer = NoteSerializer(note)
-    return Response(serializer.data)
+    if request.method == 'GET':
+        return getNoteDetail(request, pk)
+
+    if request.method == 'PUT':
+        return updateNote(request, pk)
+
+    if request.method == 'DELETE':
+        return deleteNote(request, pk)
