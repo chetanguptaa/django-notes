@@ -1,1 +1,4 @@
 /env
+notes/api/__pycache__/
+notes/api/migrations/__pycache__
+notes/notes/__pycache__
